@@ -2,18 +2,14 @@ from thread import *
 import copy
 
 class ThreadPool(object):
-    def __init__(self, fetcher, parser, saver, taskpool):
-        self.threadList = []
-        self.inst_fetcher = fetcher
-        self.inst_parser = parser
-        self.inst_saver = saver
+    def __init__(self, tasktypes, taskpool):
         self.taskpool = taskpool
+        self.threadList = []
+        for tasktype in tasktypes:
+            self.threadList += [BaseThread(str(tasktype)+"-"+str(i), copy.deepcopy(tasktypes[tasktype][0]), self.taskpool, tasktype) for i in range(tasktypes[tasktype][1])]
+       
     
-    def startWork(self, fetcher_num=10, parser_num=10, saver_num=10):
-        self.threadList += [FetcherThread("fetcher-%d" % i, copy.deepcopy(self.inst_fetcher), self.taskpool) for i in range(fetcher_num)]
-        self.threadList += [ParserThread("parser-%d" % i, copy.deepcopy(self.inst_parser), self.taskpool) for i in range(parser_num)]
-        self.threadList += [SaverThread("saver-%d" % i, copy.deepcopy(self.inst_saver), self.taskpool) for i in range(saver_num)]
-
+    def startWork(self):
         for t in self.threadList:
             t.setDaemon(True)
             t.start()

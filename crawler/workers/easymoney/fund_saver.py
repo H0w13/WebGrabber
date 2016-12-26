@@ -1,13 +1,16 @@
-from ...core.saver import Saver
+from ...core.saver import MongoSaver
 import pymongo
+import logging
 
-class FundSaver(Saver):
+class FundSaver(MongoSaver):
     def __init__(self):
-        Saver.__init__(self)
+        MongoSaver.__init__(self)
         return 
 
-    def doWork(self, item):
-        client = MongoClient('localhost', 27017)
-        db = client['webgrabber']
-        collection = db['easymoney_fund']        
-        collection.insert_one(item)
+    def doWork(self, task):
+        try:
+            self.saveItem(task.data)
+            logging.warning("%s saved data to database for %s", self.__class__.__name__, task.identifier)
+        except Exception as excep:
+            logging.error("%s.doWork() error: %s", self.__class__.__name__, excep)
+        return []

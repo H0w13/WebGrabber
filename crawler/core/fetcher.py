@@ -6,6 +6,7 @@ import random
 import pycurl
 import StringIO
 from ..utilities import *
+from .task import Task
 
 class Fetcher(object):
 
@@ -36,15 +37,6 @@ class Fetcher(object):
         headers = ["User-Agent:"+getRandomUserAgent(), "Accept-Encoding:gzip"]
         return headers
 
-    def doWork(self, url, repeat,useProxy):
-        time.sleep(random.randint(0, self.sleep_time))
-        try:
-            content = self.url_fetch(url, useProxy)
-        except Exception as excep:
-            if repeat >= self.max_repeat:
-                fetch_result, content = -1, None                
-            else:
-                fetch_result, content = 0, None
-            return fetch_result, content
-        return 1, content
+    def doWork(self, task):
+        raise NotImplementedError
         

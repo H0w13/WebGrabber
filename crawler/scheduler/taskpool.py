@@ -3,12 +3,11 @@ import Queue
 class TaskPool(object):
     def __init__(self, types):
         self.pool = {}
-        for name, member in types.__members__.items():
-            pool[name] = Queue.PriorityQueue()
+        for name in types:
+            self.pool[name] = Queue.PriorityQueue()
     
     def addTask(self, task):
-        tasktype = task.type
-        self.pool[taskType].put(task)
+        self.pool[task.type].put(task)
 
     def getTask(self, taskType):
         try:
