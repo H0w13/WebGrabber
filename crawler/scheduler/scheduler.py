@@ -2,15 +2,12 @@ from taskpool import *
 from threadpool import *
 
 class Scheduler(object):
-    def __init__(self):
-        pass
-    
-    def initial(self, tasktypes):
+    def __init__(self, tasktypes):
         #init taskpool
         self.tasks = TaskPool(tasktypes)
         #init threadpool
         self.threads = ThreadPool(tasktypes, self.tasks)
-    
+
     def run(self, tasks):
         for task in tasks:
             self.tasks.addTask(task)
@@ -18,6 +15,6 @@ class Scheduler(object):
 
     def allFinished(self):
         if self.tasks.isAllTaskDone() and self.threads.isAllThreadIdle():
-            logging.warning("Task queue is empty and all threads are idling. Complete the job") 
+            logging.warning("Task queue is empty and all threads are idling. Complete the job")
             return True
         return False

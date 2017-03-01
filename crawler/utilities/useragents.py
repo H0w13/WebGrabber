@@ -173,6 +173,6 @@ CONFIG_HEADERS = {
     "Warning", "WWW-Authenticate", "Origin", "Upgrade-Insecure-Requests", "X_FORWARDED_FOR"
 }
 
-def getRandomUserAgent():  
+def getRandomUserAgent():
     return random.choice(CONFIG_USERAGENT_PC)
 

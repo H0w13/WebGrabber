@@ -13,9 +13,9 @@ class FundFetcher(Fetcher):
     def doWork(self, task):
         time.sleep(random.randint(0, self.sleep_time))
         try:
-            content = self.url_fetch(task.data, False)            
+            content = self.url_fetch(task.data["url"], False)            
             logging.warning("%s downloaded content for %s", self.__class__.__name__, task.identifier)
-            return [Task(task.identifier, TaskType.HTM_PARSE, content)]
+            return [Task(task.identifier, TaskType.HTM_PARSE, {"name": task.data["name"], "content":content})]
         except Exception as excep:
             logging.error("FundFetcher.doWork() error: %s", excep)
             return []        

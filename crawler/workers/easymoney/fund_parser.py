@@ -15,9 +15,9 @@ class FundParser(Parser):
         groups = ["date", "value", "totalvalue"]
         try:
             p = re.compile(pattern)
-            iterator = p.finditer(task.data)
+            iterator = p.finditer(task.data["content"])
             for match in iterator:
-                outputJSON = {"identifier": task.identifier}
+                outputJSON = {"identifier": task.identifier, "name":task.data["name"]}
                 for g in groups:
                     outputJSON[g] = match.group(g)
                 result.append(outputJSON)
