@@ -3,12 +3,12 @@ import logging
 import random
 import time
 
-from crawler.core.engine import Engine
-from crawler.core.task import Task
-from crawler.workers.easymoney.fund_fetcher import FundFetcher
-from crawler.workers.easymoney.fund_parser import FundParser
-from crawler.workers.easymoney.fund_saver import FundSaver
-from crawler.workers.easymoney.tasktype import TaskType
+from ..core.engine import Engine
+from ..core.task import Task
+from ..workers.easymoney.fund_fetcher import FundFetcher
+from ..workers.easymoney.fund_parser import FundParser
+from ..workers.easymoney.fund_saver import FundSaver
+from ..workers.easymoney.tasktype import TaskType
 
 from .fundapp_config import settings
 

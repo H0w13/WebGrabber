@@ -2,11 +2,9 @@ from thread import *
 import copy
 
 class ThreadPool(object):
-    def __init__(self, tasktypes, taskpool):
-        self.taskpool = taskpool
+    def __init__(self, tasktypes, count):
         self.threadList = []
-        for tasktype in tasktypes:
-            self.threadList += [BaseThread(str(tasktype)+"-"+str(i), copy.deepcopy(tasktypes[tasktype][0]), self.taskpool, tasktype) for i in range(tasktypes[tasktype][1])]
+        self.threadList += [BaseThread(str(tasktype)+"-"+str(i), copy.deepcopy(tasktypes[tasktype][0]), self.taskpool, tasktype) for i in xrange(count)]
        
     
     def startWork(self):

@@ -1,20 +1,30 @@
-from taskpool import *
-from threadpool import *
+from ..core.tasktype import TaskType
+from .taskpool import TaskPool
+import logging
 
 class Scheduler(object):
     def __init__(self, tasktypes):
         #init taskpool
-        self.tasks = TaskPool(tasktypes)
-        #init threadpool
-        self.threads = ThreadPool(tasktypes, self.tasks)
+        self.pools = {}
+        for tasktype in tasktypes:
+            self.pools[tasktype.name] = TaskPool()
 
-    def run(self, tasks):
+    def addTask(self, tasks):
         for task in tasks:
-            self.tasks.addTask(task)
-        self.threads.startWork()
+            self.pools[task.tasktype.name].addTask(task)
 
-    def allFinished(self):
-        if self.tasks.isAllTaskDone() and self.threads.isAllThreadIdle():
+    def getTask(self, tasktype):
+        if isinstance(tasktype, TaskType):
+            return self.pools[tasktype.name].getTask()
+        else:
+            logging.error("Invalid task type")
+            return None
+
+    def isPoolEmpty(self):
+        isEmpty = True
+        for pool in self.pools:
+            isEmpty = isEmpty and pool.isAllTaskDone()
+        if isEmpty:
             logging.warning("Task queue is empty and all threads are idling. Complete the job")
             return True
         return False

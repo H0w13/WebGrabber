@@ -1,3 +1,3 @@
-from .apps import fundapp
+#import apps.fundapp
 
-fundapp.run()
+#fundapp.run()

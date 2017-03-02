@@ -1,25 +1,22 @@
 import Queue
+import logging
 
 class TaskPool(object):
-    def __init__(self, types):
-        self.pool = {}
-        for name in types:
-            self.pool[name] = Queue.PriorityQueue()
-    
-    def addTask(self, task):
-        self.pool[task.type].put(task)
+    def __init__(self):
+        self.pool = Queue.PriorityQueue()
 
-    def getTask(self, taskType):
+    def addTask(self, task):
+        self.pool.put(task)
+
+    def getTask(self):
         try:
-            return self.pool[taskType].get(block=True, timeout=5)
+            return self.pool.get(block=True, timeout=5)
         except Exception as excep:
+            logging.error("Retrieve task error. " + excep.message)
             return None
-    
-    def task_done(self, taskType):
-        self.pool[taskType].task_done()
+
+    def task_done(self):
+        self.pool.task_done()
 
     def isAllTaskDone(self):
-        isEmpty = True
-        for type in self.pool:
-            isEmpty = isEmpty and self.pool[type].empty()
-        return isEmpty
+        return self.pool.empty()
