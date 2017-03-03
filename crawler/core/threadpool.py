@@ -1,12 +1,11 @@
-from thread import *
-import copy
+from .thread import BaseThread
+from .thread import ThreadStatus
 
 class ThreadPool(object):
-    def __init__(self, tasktypes, count):
+    def __init__(self, tasktype, count, getTask):
         self.threadList = []
-        self.threadList += [BaseThread(str(tasktype)+"-"+str(i), copy.deepcopy(tasktypes[tasktype][0]), self.taskpool, tasktype) for i in xrange(count)]
-       
-    
+        self.threadList += [BaseThread(str(tasktype)+"-"+str(i), tasktype, tasktype.handler, getTask) for i in xrange(count)]
+
     def startWork(self):
         for t in self.threadList:
             t.setDaemon(True)
@@ -22,3 +21,7 @@ class ThreadPool(object):
                 t.terminated = True
             return True
         return False
+
+    def terminate(self):
+        for t in self.threadList:
+            t.terminated = True

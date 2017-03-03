@@ -13,7 +13,7 @@ class ThreadStatus(enum.Enum):
 
 class BaseThread(threading.Thread):
 
-    def __init__(self, name, tasktype, worker, callback):
+    def __init__(self, name, tasktype, worker, getTask):
         threading.Thread.__init__(self, name=name)
 
         def create_obj(cls_name):
@@ -30,7 +30,7 @@ class BaseThread(threading.Thread):
         self.terminated = False
         self.status = ThreadStatus.IDLE
         self.tasktype = tasktype
-        self.callback = callback
+        self.getTask = getTask
         return
 
     def run(self):
@@ -38,7 +38,7 @@ class BaseThread(threading.Thread):
             "%s[%s] start", self.__class__.__name__, self.getName())
         while True:
             try:
-                task = self.getTask()
+                task = self.getTask(self.tasktype.name)
                 if task:
                     logging.warning("%s[%s] got a task.",
                                     self.__class__.__name__, self.getName())
@@ -60,20 +60,7 @@ class BaseThread(threading.Thread):
         try:
             logging.warning("%s[%s] start working",
                             self.__class__.__name__, self.getName())
-            tasks = self.worker.doWork(task)
-            logging.warning("%s[%s] generates %s new tasks and add to task pool",
-                            self.__class__.__name__, self.getName(), len(tasks))
-            for t in tasks:
-                self.pool.addTask(t)
-            self.pool.task_done(self.tasktype)
+            self.worker.doWork(task)
         except Exception as excep:
             logging.error("%s.worker.doWork() error: %s",
                           self.__class__.__name__, excep)
-
-    def getTask(self):
-        logging.warning("%s[%s] try to get a task from %s queue",
-                        self.__class__.__name__, self.getName(), self.tasktype)
-        try:
-            return self.pool.getTask(self.tasktype)
-        except Exception as excep:
-            return None

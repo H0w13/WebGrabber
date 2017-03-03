@@ -1,6 +1,7 @@
+import logging
+
 from ..scheduler import Scheduler
 from .threadpool import ThreadPool
-import logging
 
 
 class Engine(object):
@@ -14,10 +15,14 @@ class Engine(object):
             count = 10
             if self.settings[tasktype.name + ".count"]:
                 count = self.settings[tasktype.name + ".count"]
-            self.threadpool[tasktype.name] = ThreadPool(tasktype, count)
+            self.threadpool[tasktype.name] = ThreadPool(tasktype, count, self.getTask)
 
     def run(self, initTasks):
         self.scheduler.addTask(initTasks)
+
+    def getTask(self, tasktype):
+        self.threadpool[tasktype].task_done()
+        return self.threadpool[tasktype].getTask()
 
     def allFinished(self):
         isAllThreadIdle = True

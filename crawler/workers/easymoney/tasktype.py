@@ -1,6 +1,14 @@
-import enum
+from ...core.tasktype import TaskType
+from .fund_fetcher import FundFetcher
+from .fund_parser import FundParser
+from .fund_saver import FundSaver
 
-class TaskType(enum.Enum):
-    URL_FETCH = "fetcher"
-    HTM_PARSE = "parser" 
-    ITEM_SAVE = "saver"
+class FundTaskType():
+    def __init__(self):
+        pass
+    
+    def getTypes(self):
+        types = []
+        types.append(TaskType("Fetcher", FundFetcher.__name__))
+        types.append(TaskType("Saver", FundSaver.__name__))
+        types.append(TaskType("Parser", FundParser.__name__))
