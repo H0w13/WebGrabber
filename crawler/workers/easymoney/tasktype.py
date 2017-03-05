@@ -6,7 +6,7 @@ from .fund_saver import FundSaver
 class FundTaskType():
     def __init__(self):
         pass
-    
+
     def getTypes(self):
         types = []
         types.append(TaskType("Fetcher", FundFetcher.__name__))

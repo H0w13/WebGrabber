@@ -21,8 +21,10 @@ class Engine(object):
         self.scheduler.addTask(initTasks)
 
     def getTask(self, tasktype):
-        self.threadpool[tasktype].task_done()
-        return self.threadpool[tasktype].getTask()
+        return self.scheduler.getTask(tasktype)
+
+    def putTask(self, tasks):
+        self.scheduler.addTask(tasks)
 
     def allFinished(self):
         isAllThreadIdle = True

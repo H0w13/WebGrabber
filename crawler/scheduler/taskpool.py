@@ -10,13 +10,12 @@ class TaskPool(object):
 
     def getTask(self):
         try:
-            return self.pool.get(block=True, timeout=5)
+            task = self.pool.get(block=True, timeout=5)
+            self.pool.task_done()
+            return task
         except Exception as excep:
             logging.error("Retrieve task error. " + excep.message)
             return None
-
-    def task_done(self):
-        self.pool.task_done()
 
     def isAllTaskDone(self):
         return self.pool.empty()
