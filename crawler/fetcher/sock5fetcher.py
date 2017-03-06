@@ -10,7 +10,7 @@ import pycurl
 from ..utilities import useragents
 from ..core.task import Task
 
-from ..settings import settings
+from ..core.settings import settings
 
 
 class Sock5Fetcher(object):

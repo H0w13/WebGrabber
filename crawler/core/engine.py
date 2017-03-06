@@ -2,6 +2,7 @@ import logging
 
 from ..scheduler import Scheduler
 from .threadpool import ThreadPool
+from .eventhub import EventHub
 
 
 class Engine(object):
@@ -9,13 +10,17 @@ class Engine(object):
 
     def __init__(self, tasktypes, settings):
         self.settings = settings
+        self.eventhub = EventHub()
         self.scheduler = Scheduler(tasktypes)
         self.threadpool = {}
         for tasktype in tasktypes:
+            #Here we can add middleware
+            self.eventhub.registerPreWork(tasktype.name, self.getTask)
+            self.eventhub.registerPostWork(tasktype.name, self.putTask)
             count = 10
             if self.settings[tasktype.name + ".count"]:
                 count = self.settings[tasktype.name + ".count"]
-            self.threadpool[tasktype.name] = ThreadPool(tasktype, count, self.getTask)
+            self.threadpool[tasktype.name] = ThreadPool(tasktype, count, self.eventhub)
 
     def run(self, initTasks):
         self.scheduler.addTask(initTasks)

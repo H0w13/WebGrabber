@@ -3,7 +3,7 @@ from .fund_fetcher import FundFetcher
 from .fund_parser import FundParser
 from .fund_saver import FundSaver
 
-class FundTaskType():
+class FundTaskType(object):
     def __init__(self):
         pass
 

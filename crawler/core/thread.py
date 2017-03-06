@@ -4,7 +4,6 @@ import threading
 import time
 
 import enum
-from twisted.internet import reactor
 
 class ThreadStatus(enum.Enum):
     RUNNING = "Running"
@@ -13,7 +12,7 @@ class ThreadStatus(enum.Enum):
 
 class BaseThread(threading.Thread):
 
-    def __init__(self, name, tasktype, worker, getTask):
+    def __init__(self, name, tasktype, worker, eventHub):
         threading.Thread.__init__(self, name=name)
 
         def create_obj(cls_name):
@@ -30,7 +29,7 @@ class BaseThread(threading.Thread):
         self.terminated = False
         self.status = ThreadStatus.IDLE
         self.tasktype = tasktype
-        self.getTask = getTask
+        self.eventHub = eventHub
         return
 
     def run(self):
@@ -38,12 +37,13 @@ class BaseThread(threading.Thread):
             "%s[%s] start", self.__class__.__name__, self.getName())
         while True:
             try:
-                task = self.getTask(self.tasktype.name)
+                task = self.eventHub.getPreWork()[0](self.tasktype.name)
                 if task:
                     logging.warning("%s[%s] got a task.",
                                     self.__class__.__name__, self.getName())
                     self.status = ThreadStatus.RUNNING
-                    self.work(task)
+                    nextTasks = self.work(task)
+                    self.eventHub.getPostWork()[0](nextTasks)
                 else:
                     logging.warning(
                         "%s[%s] could not get task. idling", self.__class__.__name__, self.getName())
@@ -60,7 +60,7 @@ class BaseThread(threading.Thread):
         try:
             logging.warning("%s[%s] start working",
                             self.__class__.__name__, self.getName())
-            self.worker.doWork(task)
+            return self.worker.doWork(task)
         except Exception as excep:
             logging.error("%s.worker.doWork() error: %s",
                           self.__class__.__name__, excep)
