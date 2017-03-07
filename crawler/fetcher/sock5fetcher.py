@@ -7,19 +7,16 @@ import time
 
 import pycurl
 
-from ..utilities import useragents
+from . import Fetcher
 from ..core.task import Task
 
 from ..core.settings import settings
 
 
-class Sock5Fetcher(object):
+class Sock5Fetcher(Fetcher):
 
     def __init__(self):
-        reload(sys)
-        sys.setdefaultencoding('utf8')
-        self.max_repeat = 3
-        self.sleep_time = 5
+        Fetcher.__init__()
 
     def url_fetch(self, url, useProxy=False):
         c = pycurl.Curl()
@@ -36,12 +33,7 @@ class Sock5Fetcher(object):
         c.setopt(c.HTTPHEADER, self.build_header())
 
         c.perform()
-        return b.getvalue()
-
-    def build_header(self):
-        headers = ["User-Agent:" + useragents.getRandomUserAgent(),
-                   "Accept-Encoding:gzip"]
-        return headers
+        return b.getvalue()    
 
     def doWork(self, task):
         raise NotImplementedError

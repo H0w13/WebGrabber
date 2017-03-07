@@ -9,3 +9,6 @@ settings["codelist"] = [{"code": "486002", "name": "工银全球精选"},
                         {"code": "160505", "name": "博时主题行业"},
                         {"code": "460300", "name": "华泰博瑞沪深３００"},
                         {"code": "160119", "name": "南方中证５００"}]
+settings["Fetcher.count"] = 1
+settings["Parser.count"] = 1
+settings["Saver.count"] = 10

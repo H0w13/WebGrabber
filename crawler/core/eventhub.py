@@ -2,6 +2,8 @@ class EventHub(object):
     def __init__(self):
         self.prework = {}
         self.postwork = {}
+        self.getTask = None
+        self.putTask = None
 
     def registerPreWork(self, tasktypename, handler):
         if tasktypename in self.prework:
@@ -20,3 +22,15 @@ class EventHub(object):
 
     def getPostWork(self, tasktypename):
         return self.postwork[tasktypename]
+
+    def registerGetTask(self, handler):
+        self.getTask = handler
+
+    def registerPutTask(self, handler):
+        self.putTask = handler
+
+    def getGetTask(self):
+        return self.getTask
+
+    def getPutTask(self):
+        return self.putTask

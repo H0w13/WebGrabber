@@ -37,13 +37,13 @@ class BaseThread(threading.Thread):
             "%s[%s] start", self.__class__.__name__, self.getName())
         while True:
             try:
-                task = self.eventHub.getPreWork()[0](self.tasktype.name)
+                task = self.eventHub.getGetTask()(self.tasktype.name)
                 if task:
                     logging.warning("%s[%s] got a task.",
                                     self.__class__.__name__, self.getName())
                     self.status = ThreadStatus.RUNNING
                     nextTasks = self.work(task)
-                    self.eventHub.getPostWork()[0](nextTasks)
+                    self.eventHub.getPutTask()(nextTasks)
                 else:
                     logging.warning(
                         "%s[%s] could not get task. idling", self.__class__.__name__, self.getName())

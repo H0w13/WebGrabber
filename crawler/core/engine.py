@@ -14,9 +14,11 @@ class Engine(object):
         self.scheduler = Scheduler(tasktypes)
         self.threadpool = {}
         for tasktype in tasktypes:
+            self.eventhub.registerGetTask(self.getTask)
+            self.eventhub.registerPutTask(self.putTask)
             #Here we can add middleware
-            self.eventhub.registerPreWork(tasktype.name, self.getTask)
-            self.eventhub.registerPostWork(tasktype.name, self.putTask)
+            #self.eventhub.registerPreWork(tasktype.name, None)
+            #self.eventhub.registerPostWork(tasktype.name, None)
             count = 10
             if self.settings[tasktype.name + ".count"]:
                 count = self.settings[tasktype.name + ".count"]

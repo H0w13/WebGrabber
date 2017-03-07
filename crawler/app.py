@@ -1,3 +1,4 @@
-#import apps.fundapp
+from .apps.fundapp import FundApp
 
-#fundapp.run()
+app = FundApp()
+app.run()

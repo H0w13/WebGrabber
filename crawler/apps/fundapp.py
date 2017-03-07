@@ -4,36 +4,29 @@ import random
 import time
 
 from ..core.engine import Engine
-from ..core.task import Task
-from ..workers.easymoney.fund_fetcher import FundFetcher
-from ..workers.easymoney.fund_parser import FundParser
-from ..workers.easymoney.fund_saver import FundSaver
-from ..workers.easymoney.tasktype import TaskType
+from ..core.request import Request
+from ..workers.easymoney.tasktype import FundTaskType
 
 from .fundapp_config import settings
 
+class FundApp(object):
 
-def run():
-    '''main function'''
-    tasks = [Task(code["code"], TaskType.URL_FETCH, {"name": code[
-        "name"], "url": settings["baseurl"] + code["code"]}) for code in settings["codelist"]]
+    def run(self):
+        '''main function'''
+        tasks = []
+        for code in settings["codelist"]:
+            t = Request(code["code"], "Fetcher")
+            t.build(settings["baseurl"] + code["code"])
+            t.addTags({"name": code["name"]})
+            tasks.append(t)
 
-    fetcher = FundFetcher()
-    parser = FundParser()
-    saver = FundSaver()
+        fundTaskType = FundTaskType()
 
-    tasktypes = {TaskType.URL_FETCH: (fetcher, 1),
-                 TaskType.HTM_PARSE: (parser, 1),
-                 TaskType.ITEM_SAVE: (saver, 1)}
-
-    engine = Engine(tasktypes, settings)
-    engine.run(tasks)
-    while True:
-        logging.warning("Check status")
-        time.sleep(random.randint(0, 5))
-        if engine.allFinished():
-            break
-    logging.warning("Job done")
-
-if __name__ == "__main__":
-    run()
+        engine = Engine(fundTaskType.getTypes(), settings)
+        engine.run(tasks)
+        while True:
+            logging.warning("Check status")
+            time.sleep(random.randint(0, 5))
+            if engine.allFinished():
+                break
+        logging.warning("Job done")
