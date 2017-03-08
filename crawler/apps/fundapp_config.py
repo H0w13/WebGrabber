@@ -12,3 +12,6 @@ settings["codelist"] = [{"code": "486002", "name": "工银全球精选"},
 settings["Fetcher.count"] = 1
 settings["Parser.count"] = 1
 settings["Saver.count"] = 10
+settings["Mongo.server"] = "localhost"
+settings["Mongo.port"] = 27017
+settings["Mongo.db"] = "easymoney"
