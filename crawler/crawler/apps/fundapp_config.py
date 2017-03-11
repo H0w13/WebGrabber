@@ -1,7 +1,7 @@
 # -- coding: utf-8 --
 from ..framework.core.settings import settings
 
-settings["baseurl"] = "http://fund.eastmoney.com/f10/F10DataApi.aspx?type=lsjz&per=10&code="
+settings["baseurl"] = "http://fund.eastmoney.com/f10/F10DataApi.aspx?type=lsjz&per=100&code="
 settings["codelist"] = [{"code": "486002", "name": "工银全球精选"},
                         {"code": "040046", "name": "华安纳斯达克"},
                         {"code": "270025", "name": "广发行业领先"},
