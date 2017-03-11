@@ -15,8 +15,8 @@ class TaskPool(object):
             task = self.pool.get(block=True, timeout=5)
             return task
         except Exception as excep:
-            logging.error("Retrieve task error.")
-            logging.error(traceback.format_exc())
+            # logging.error("Retrieve task error.")
+            # logging.error(traceback.format_exc())
             return None
 
     def isAllTaskDone(self):
