@@ -16,8 +16,8 @@ class FundApp(object):
         tasks = []
         for code in settings["codelist"]:
             t = Request(code["code"], "Fetcher")
-            t.build(settings["baseurl"] + code["code"])
-            t.addTags({"name": code["name"]})
+            t.build(settings["baseurl"] + code["code"] + "&page=1")
+            t.addTags({"name": code["name"], "code": code["code"]})
             tasks.append(t)
 
         fundTaskType = FundTaskType()
