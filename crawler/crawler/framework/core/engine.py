@@ -1,6 +1,6 @@
 import logging
 
-from ..scheduler import Scheduler
+from ..scheduler.scheduler import Scheduler
 from .threadpool import ThreadPool
 from .eventhub import EventHub
 
@@ -26,9 +26,11 @@ class Engine(object):
 
     def run(self, initTasks):
         self.scheduler.addTask(initTasks)
+        for pool in self.threadpool:
+            self.threadpool[pool].startWork()
 
-    def getTask(self, tasktype):
-        return self.scheduler.getTask(tasktype)
+    def getTask(self, tasktypename):
+        return self.scheduler.getTask(tasktypename)
 
     def putTask(self, tasks):
         self.scheduler.addTask(tasks)
@@ -36,7 +38,7 @@ class Engine(object):
     def allFinished(self):
         isAllThreadIdle = True
         for pool in self.threadpool:
-            isAllThreadIdle = isAllThreadIdle and pool.isAllThreadIdle()
+            isAllThreadIdle = isAllThreadIdle and self.threadpool[pool].isAllThreadIdle()
 
         if self.scheduler.isPoolEmpty() and isAllThreadIdle:
             logging.warning(

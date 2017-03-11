@@ -1,7 +1,7 @@
 import logging
 
-from ...saver.mongosaver import MongoSaver
-from ...core.settings import settings
+from ...framework.saver.mongosaver import MongoSaver
+from ...framework.core.settings import settings
 
 
 class FundSaver(MongoSaver):

@@ -2,8 +2,8 @@ import logging
 import random
 import time
 
-from ...core.response import Response
-from ...fetcher.sock5fetcher import Sock5Fetcher
+from ...framework.core.response import Response
+from ...framework.fetcher.sock5fetcher import Sock5Fetcher
 
 
 class FundFetcher(Sock5Fetcher):
@@ -18,6 +18,7 @@ class FundFetcher(Sock5Fetcher):
             content = self.url_fetch(request.url, False)
             logging.warning("%s downloaded content for %s",
                             self.__class__.__name__, request.identifier)
+            logging.warning("page url is %s", request.url)
             response = Response(request.identifier, "Parser")
             response.addTags(request.tags)
             response.build(content)

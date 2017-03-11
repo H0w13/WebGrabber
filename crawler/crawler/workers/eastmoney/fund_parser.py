@@ -1,7 +1,7 @@
-from ...parser import Parser
-from ...core.itemdata import ItemData
-from ...core.settings import settings
-from ...core.request import Request
+from ...framework.parser import Parser
+from ...framework.core.itemdata import ItemData
+from ...framework.core.settings import settings
+from ...framework.core.request import Request
 import re
 import logging
 
@@ -18,7 +18,7 @@ class FundParser(Parser):
         groups = ["date", "value", "totalvalue"]
         try:
             p = re.compile(pattern)
-            iterator = p.finditer(response.data)
+            iterator = p.finditer(response.responsedata)
             for match in iterator:
                 output = ItemData(response.identifier, "Saver")
                 output.addTags(response.tags)
@@ -28,12 +28,12 @@ class FundParser(Parser):
                 output.build(content)
                 result.append(output)
             #get current pages and add fetcher tasks for more pages
-            p = re.compile(ptnCurPage)
-            match = p.match(response.data)
-            if match:
-                curPage = match.group("cur")
+            curMath = re.search(ptnCurPage, response.responsedata)
+            if curMath:
+                curPage = curMath.group("cur")
                 if int(curPage) == 1:
-                    m = re.match(ptnTotalPage, response.data)
+                    logging.warning("got first page for " + response.tags["code"])
+                    m = re.search(ptnTotalPage, response.responsedata)
                     if m:
                         totalPage = int(m.group("total"))
                         for x in xrange(2, totalPage+1):
@@ -41,6 +41,7 @@ class FundParser(Parser):
                             t.build(settings["baseurl"] + response.tags["code"] + "&page=" + str(x))
                             t.addTags({"name": response.tags["name"]})
                             result.append(t)
+                        logging.warning("add %s page for %s", totalPage-1, response.tags["code"])
 
             logging.warning("%s parsed content for %s", self.__class__.__name__, response.identifier)
         except Exception as excep:

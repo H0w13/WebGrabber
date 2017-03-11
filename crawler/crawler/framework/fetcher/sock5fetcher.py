@@ -16,7 +16,7 @@ from ..core.settings import settings
 class Sock5Fetcher(Fetcher):
 
     def __init__(self):
-        Fetcher.__init__()
+        Fetcher.__init__(self)
 
     def url_fetch(self, url, useProxy=False):
         c = pycurl.Curl()

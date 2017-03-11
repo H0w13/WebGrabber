@@ -11,19 +11,19 @@ class Scheduler(object):
 
     def addTask(self, tasks):
         for task in tasks:
-            self.pools[task.tasktype.name].addTask(task)
+            self.pools[task.typename].addTask(task)
 
-    def getTask(self, tasktype):
-        if isinstance(tasktype, TaskType):
-            return self.pools[tasktype.name].getTask()
+    def getTask(self, tasktypename):
+        if self.pools[tasktypename] != None:
+            return self.pools[tasktypename].getTask()
         else:
-            logging.error("Invalid task type")
+            logging.error("Invalid task type " + tasktypename)
             return None
 
     def isPoolEmpty(self):
         isEmpty = True
         for pool in self.pools:
-            isEmpty = isEmpty and pool.isAllTaskDone()
+            isEmpty = isEmpty and self.pools[pool].isAllTaskDone()
         if isEmpty:
             logging.warning("Task queue is empty and all threads are idling. Complete the job")
             return True

@@ -1,10 +1,10 @@
 from .task import Task
 
-class Response(Task):
+class ItemData(Task):
     def __init__(self, identifier, tasktypename):
         Task.__init__(self, identifier, tasktypename)
-        self.responsedata = None
+        self.data = None
         return
-    
+
     def build(self, data):
-        self.responsedata = data
+        self.data = data

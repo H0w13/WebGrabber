@@ -1,7 +1,7 @@
 class Task(object):
-    def __init__(self, identifier, tasktype):
+    def __init__(self, identifier, tasktypename):
         self.identifier = identifier
-        self.type = tasktype
+        self.typename = tasktypename
         self.tags = {}
 
     def addTags(self, tags):

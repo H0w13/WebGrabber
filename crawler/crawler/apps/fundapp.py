@@ -3,9 +3,9 @@ import logging
 import random
 import time
 
-from ..core.engine import Engine
-from ..core.request import Request
-from ..workers.easymoney.tasktype import FundTaskType
+from ..framework.core.engine import Engine
+from ..framework.core.request import Request
+from ..workers.eastmoney.tasktype import FundTaskType
 
 from .fundapp_config import settings
 
