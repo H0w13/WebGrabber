@@ -1,13 +1,14 @@
-from tornado import ioloop,web
-from ...services.dataservice import DataService
+import json
 
-class FundApiHandler(web.RequestHandler):
-    def __init__(self):
-        web.RequestHandler.__init__(self)
-        self.db = DataService()
+from bson import json_util
 
-	def get(self , story_id):
-		# story = db.stories.find_one({"_id":ObjectId(str(story_id))})
-		# self.set_header("Content-Type", "application/json")
-		# self.write(json.dumps((story),default=json_util.default))
-        pass
+from handlers.api.base import BaseApiHandler
+
+
+class FundApiHandler(BaseApiHandler):
+
+    def get(self, fundId):
+        fund = self.dbService.findItems('fund', {"code": fundId})
+        self.set_header("Content-Type", "application/json")
+        self.write(json.dumps((fund), default=json_util.default))
+        self.finish()

@@ -1,11 +1,10 @@
 from pymongo import MongoClient
-from ..settings import settings
 
 class DataService(object):
 
-    def __init__(self):
-        client = MongoClient(settings['dbserver'], settings['dbport'])
-        self.db = client[settings['dbname']]
+    def __init__(self, server, port, db):
+        client = MongoClient(server, port)
+        self.db = client[db]
 
     def saveItem(self, collectionname, item):
         """insert item"""
@@ -16,3 +15,11 @@ class DataService(object):
         """insert or update item"""
         collection = self.db[collectionname]
         collection.update(findQuery, item, upsert=True)
+
+    def findItems(self, collectioname, findQuery):
+        result = []
+        collection = self.db[collectioname]
+        items = collection.find(findQuery)
+        for item in items:
+            result.append(item)
+        return result
